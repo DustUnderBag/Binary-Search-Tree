@@ -11,3 +11,7 @@ class Tree {
         this.root = root;
     }
 }
+
+function buildTree(root) {
+    return new Tree(root);
+}
