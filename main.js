@@ -13,7 +13,11 @@ class Tree {
 }
 
 function buildTree(arr) {
-    console.log(mergeSort(arr, 0, arr.length - 1));
+    const sorted = mergeSort(arr, 0, arr.length - 1);
+    const noDuplicate = removeDuplicate(sorted);
+    
+    console.log(sorted);
+    console.log(noDuplicate);
 }
 
 
@@ -35,6 +39,7 @@ function buildTree(arr) {
 
 [1,4,7,8,23]
 */
+
 function mergeSort(arr, start, end) {
     if(start == end) return [arr[start]];
     
@@ -69,6 +74,13 @@ function merge(a,b) {
 
     return c;
 }
+
+function removeDuplicate(arr) {
+    const seen = {};
+
+    return arr.filter( num => seen.hasOwnProperty(num) ? false : (seen[num] = true) );
+}
+
 const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 
 buildTree(arr);
