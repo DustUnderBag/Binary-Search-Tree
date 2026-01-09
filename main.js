@@ -12,6 +12,17 @@ class Tree {
     }
 }
 
+function insert(root , value) {
+    if(root == null) return new Node(value);
+    
+    if(value < root.data) {
+        root.left = insert(root.left, value);
+    }else {
+        root.right = insert(root.right, value);
+    }
+    return root;
+}
+
 function buildTree(arr) {
     let sorted = mergeSort(arr, 0, arr.length - 1);
 
@@ -91,8 +102,11 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
   }
 };
 
-
 const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 
 const tree = buildTree(arr);
+prettyPrint(tree.root);
+
+insert(tree.root, 16);
+insert(tree.root, 0.5);
 prettyPrint(tree.root);
