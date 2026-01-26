@@ -23,6 +23,26 @@ function insert(root , value) {
     return root;
 }
 
+function deleteItem(root, value) {
+    if(value === root.data) {
+        if(!root.left && root.right) {
+            return root.right;
+        }else if(root.left && !root.right) {
+            return root.left;
+        }else if(!root.left && !root.right) {
+            return null;
+        }
+    }
+
+    if(value < root.data) {
+        root.left = deleteItem(root.left, value);
+    }else {
+        root.right = deleteItem(root.right, value);
+    }
+
+    return root;
+}
+
 function buildTree(arr) {
     let sorted = mergeSort(arr, 0, arr.length - 1);
 
@@ -107,6 +127,6 @@ const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = buildTree(arr);
 prettyPrint(tree.root);
 
-insert(tree.root, 16);
-insert(tree.root, 0.5);
+deleteItem(tree.root, 1);
+
 prettyPrint(tree.root);
