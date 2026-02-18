@@ -23,10 +23,8 @@ function insert(root , value) {
     return root;
 }
 
-//return the next bigger node, the right sub-tree's smallest.
-function findSuccessor(root) {
 
-}
+//Delete functions
 
 /*Three cases
 1. Delete leaf node -> 
@@ -45,6 +43,13 @@ function findSuccessor(root) {
     Step 2:
      Replace target node with that successor/predecessor node, then delete the replacement node.
 
+    in deleteItem, find the target node, checks if it has two child nodes,
+    - Make a variable `successor`, equals to `findSuccessor`
+    - The Successor locate the next larger value, return the value.
+    - Run `deleteItem`, feed the method with current node, and successor's value, this process deletes the successor/replacement node.
+    - Assign the target node to be deleted with successor's value, 
+    - Return root.
+
 */
 function deleteItem(root, value) {
     //If value doesn't exist in the tree.
@@ -61,10 +66,37 @@ function deleteItem(root, value) {
         //If target node has ONE child, return its child.
         if(root.left === null) return root.right;
         if(root.right === null) return root.left;
+
+        // If target node has TWO children, find next greater value(replacement node), 
+        // replace target value with replacement value, 
+        // delete the original replacement node. 
+        const successorValue = findNextGreaterValue(root);
+        deleteItem(root, successorValue);
+        root.data = successorValue;
     }
 
     return root;
 }
+
+/*Find the next greater value.
+  - Expects root.right as input.
+    -Traverse till the left end of a given tree.
+/*
+ Successor: a leaf node, meaning it's the smallest value in the right subtree.
+ The smallest node has no left child, might or might not have right child.
+*/
+
+function findNextGreaterValue(root) {
+    return findSmallestValue(root.right);
+}
+
+/*Traverse till the end of the left subtree.*/
+function findSmallestValue(root) {
+    if(root.left === null) return root.data;
+    return findSmallestValue(root.left);
+}
+
+//Builder Functions
 
 function buildTree(arr) {
     let sorted = mergeSort(arr, 0, arr.length - 1);
@@ -148,13 +180,10 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 
 const tree = buildTree(arr);
-insert(tree.root, 20.2)
-
+insert(tree.root, 20.2);
+insert(tree.root, 8.8)
 prettyPrint(tree.root);
-deleteItem(tree.root, 5);
-deleteItem(tree.root, 7);
-deleteItem(tree.root, 1);
-deleteItem(tree.root, 4);
-deleteItem(tree.root, 324);
+
+deleteItem(tree.root, 67);
 
 prettyPrint(tree.root);
