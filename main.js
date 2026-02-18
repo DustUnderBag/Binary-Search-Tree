@@ -70,31 +70,32 @@ function deleteItem(root, value) {
         // If target node has TWO children, find next greater value(replacement node), 
         // replace target value with replacement value, 
         // delete the original replacement node. 
-        const successorValue = findNextGreaterValue(root);
-        deleteItem(root, successorValue);
-        root.data = successorValue;
+        const successorNode = findNextGreaterValue(root);
+        console.log("successor val: ", successorNode.data);
+        root.right = deleteItem(root.right, successorNode.data);
+        root.data = successorNode.data;
     }
 
     return root;
 }
 
-/*Find the next greater value.
-  - Expects root.right as input.
-    -Traverse till the left end of a given tree.
-/*
- Successor: a leaf node, meaning it's the smallest value in the right subtree.
- The smallest node has no left child, might or might not have right child.
-*/
+function findNextGreaterValue(currNode) {
+    /*Find the next greater value.
+      - Expects root.right as input.
+        -Traverse till the left end of a given tree.
+    /*
+     Successor: a leaf node, meaning it's the smallest value in the right subtree.
+     The smallest node has no left child, might or might not have right child.
+    */
+   currNode = currNode.right;
 
-function findNextGreaterValue(root) {
-    return findSmallestValue(root.right);
+   while(currNode.left !== null) {
+       currNode = currNode.left;
+    }
+    
+    return currNode;
 }
 
-/*Traverse till the end of the left subtree.*/
-function findSmallestValue(root) {
-    if(root.left === null) return root.data;
-    return findSmallestValue(root.left);
-}
 
 //Builder Functions
 
@@ -185,5 +186,6 @@ insert(tree.root, 8.8)
 prettyPrint(tree.root);
 
 deleteItem(tree.root, 67);
+
 
 prettyPrint(tree.root);
