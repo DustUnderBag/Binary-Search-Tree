@@ -10,6 +10,18 @@ class Tree {
     constructor(root) {
         this.root = root;
     }
+
+    levelOrderForEach(callback) {
+        const queue = [];
+        queue.push(this.root);
+
+        while(queue.length !== 0) {
+            let first = queue.shift();
+            callback(first);
+            if(first.left !== null) queue.push(first.left);
+            if(first.right !== null) queue.push(first.right);
+        }
+    }
 }
 
 function insert(root , value) {
@@ -71,7 +83,6 @@ function deleteItem(root, value) {
         // replace target value with replacement value, 
         // delete the original replacement node. 
         const successorNode = findNextGreaterValue(root);
-        console.log("successor val: ", successorNode.data);
         root.right = deleteItem(root.right, successorNode.data);
         root.data = successorNode.data;
     }
@@ -189,3 +200,10 @@ deleteItem(tree.root, 67);
 
 
 prettyPrint(tree.root);
+
+tree.levelOrderForEach(logNode);
+
+
+function logNode(node) {
+    console.log(node.data);
+}
