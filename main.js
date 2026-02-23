@@ -12,14 +12,24 @@ class Tree {
     }
 
     levelOrderForEach(callback) {
-        const queue = [];
-        queue.push(this.root);
+        try {
+            if( !(callback instanceof Function) ) {
+              throw new Error("Expected output: a callback is required!");
+            }
 
-        while(queue.length !== 0) {
-            let firstNode = queue.shift();
-            callback(firstNode.data);
-            if(firstNode.left !== null) queue.push(firstNode.left);
-            if(firstNode.right !== null) queue.push(firstNode.right);
+            const queue = [];
+            queue.push(this.root);
+
+            while(queue.length !== 0) {
+                let firstNode = queue.shift();
+                callback(firstNode.data);
+                if(firstNode.left !== null) queue.push(firstNode.left);
+                if(firstNode.right !== null) queue.push(firstNode.right);
+            }
+        } catch(e) {
+            console.error(e);
+            //Expected output: a callback is required!
+            return;
         }
     }
 }
@@ -201,9 +211,12 @@ deleteItem(tree.root, 67);
 
 prettyPrint(tree.root);
 
-tree.levelOrderForEach(logValue);
 
+let notFunction = "Not Function";
 
 function logValue(value) {
     console.log(value);
 }
+
+tree.levelOrderForEach(notFunction);
+
