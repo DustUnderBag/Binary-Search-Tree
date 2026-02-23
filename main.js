@@ -16,10 +16,10 @@ class Tree {
         queue.push(this.root);
 
         while(queue.length !== 0) {
-            let first = queue.shift();
-            callback(first);
-            if(first.left !== null) queue.push(first.left);
-            if(first.right !== null) queue.push(first.right);
+            let firstNode = queue.shift();
+            callback(firstNode.data);
+            if(firstNode.left !== null) queue.push(firstNode.left);
+            if(firstNode.right !== null) queue.push(firstNode.right);
         }
     }
 }
@@ -201,9 +201,9 @@ deleteItem(tree.root, 67);
 
 prettyPrint(tree.root);
 
-tree.levelOrderForEach(logNode);
+tree.levelOrderForEach(logValue);
 
 
-function logNode(node) {
-    console.log(node.data);
+function logValue(value) {
+    console.log(value);
 }
