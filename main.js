@@ -16,21 +16,24 @@ class Tree {
             if( !(callback instanceof Function) ) {
               throw new Error("Expected output: a callback is required!");
             }
-
-            const queue = [];
-            queue.push(this.root);
-
-            while(queue.length !== 0) {
-                let firstNode = queue.shift();
-                callback(firstNode.data);
-                if(firstNode.left !== null) queue.push(firstNode.left);
-                if(firstNode.right !== null) queue.push(firstNode.right);
-            }
         } catch(e) {
             console.error(e);
             //Expected output: a callback is required!
             return;
         }
+
+        const queue = [];
+        queue.push(this.root);
+        while(queue.length !== 0) {
+            let firstNode = queue.shift();
+            callback(firstNode.data);
+            if(firstNode.left !== null) queue.push(firstNode.left);
+            if(firstNode.right !== null) queue.push(firstNode.right);
+        }
+    }
+
+    levelOrderForEachRecur(callback) {
+        
     }
 }
 
