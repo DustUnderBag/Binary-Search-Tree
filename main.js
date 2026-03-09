@@ -85,6 +85,14 @@ function preOrderForEach(root, callback) {
   preOrderForEach(root.right, callback);
 }
 
+function inOrderForEach(root, callback) {
+  if(root === null) return;
+
+  inOrderForEach(root.left, callback);
+  callback(root.data);
+  inOrderForEach(root.right, callback);
+}
+
 function insert(root , value) {
     if(root == null) return new Node(value);
     
@@ -271,4 +279,4 @@ function logValue(value) {
 
 //tree.levelOrderForEach(logValue);
 //tree.levelOrderForEachRecur(logValue);
-preOrderForEach(tree.root, logValue);
+inOrderForEach(tree.root, logValue);
