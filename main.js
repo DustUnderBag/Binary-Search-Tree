@@ -11,6 +11,7 @@ class Tree {
     this.root = root;
   }
   
+  //Level Order Traversal: Iterative solution
   levelOrderForEach(callback) {
     if(this.root === null) return;
 
@@ -24,36 +25,27 @@ class Tree {
       let firstNode = queue.shift();
       callback(firstNode.data);
 
-      if(firstNode.left !== null) queue.push(firstNode.left);
-      if(firstNode.right !== null) queue.push(firstNode.right);
+      if(firstNode.left !== null) 
+        queue.push(firstNode.left);
+
+      if(firstNode.right !== null) 
+        queue.push(firstNode.right);
     }
   }
 
-    //Store nodes into an array level by level.
-    //Q = [lv-0, lv-1, lv-2, lv-3, ...];
-
-    /*
-    Count level 0.
-    1. Access a root, given level, given result [].
-    2. Get the level number, insert current root into an array that is nested
-       inside of the result array, the index equals to the level number.
-    3. Check whether current node has left/right child, if yes, insert them 
-       into the nested array nested inside result array at index (level + 1).
-    */
-  static #buildLevelOrderRecur(root, level, result) {
-    //Insert new nested array if none represents current level.
-    if(result.length - 1 < level)
-      result[level] = [];
-
-    result[level].push(root);
-
-    if(root.left !== null) Tree.#buildLevelOrderRecur(root.left, level + 1, result);
-    if(root.right !== null) Tree.#buildLevelOrderRecur(root.right, level + 1, result);
-  }
-
+  //Level Order Traversal: Recursive solution
+  //Store nodes into an array level by level: Queue = [lv-0, lv-1, lv-2, lv-3, ...];
+  /*
+  Count level 0.
+  1. Access a root, given level, given result [].
+  2. Get the level number, insert current root into an array that is nested
+     inside of the result array, the index equals to the level number.
+  3. Check whether current node has left/right child, if yes, insert them 
+     into the nested array nested inside result array at index (level + 1).
+  */
   levelOrderForEachRecur(callback) {
     if(this.root === null) return; //Won't work with empty tree.
-        
+  
     try {
       if( !(callback instanceof Function) ) 
         throw new Error("A callback is required!");
@@ -61,13 +53,28 @@ class Tree {
         console.log(e);
         return;
     }
-    
 
-    console.log("Reached here");
     const result = [];
 
     Tree.#buildLevelOrderRecur(this.root, 0, result);
-    return result;
+
+    result.forEach(level => {
+      level.forEach(node => callback(node.data));
+    });
+  }
+
+  static #buildLevelOrderRecur(root, level, result) {
+    //Insert new nested array if none represents current level.
+    if(result.length - 1 < level)
+      result[level] = [];
+
+    result[level].push(root);
+
+    if(root.left !== null) 
+      Tree.#buildLevelOrderRecur(root.left, level + 1, result);
+
+    if(root.right !== null) 
+      Tree.#buildLevelOrderRecur(root.right, level + 1, result);
   }
 
 }
@@ -256,7 +263,5 @@ function logValue(value) {
     console.log(value);
 }
 
-//tree.levelOrderForEach(logValue);
-console.log(tree.levelOrderForEachRecur(notFunction));
-
-console.log("Hey");
+tree.levelOrderForEach(logValue);
+tree.levelOrderForEachRecur(logValue);
