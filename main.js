@@ -64,19 +64,25 @@ class Tree {
   }
 
   static #buildLevelOrderRecur(root, level, result) {
+    if(root === null) return; //Exit if node is leaf node / null.
+
     //Insert new nested array if none represents current level.
     if(result.length - 1 < level)
       result[level] = [];
 
     result[level].push(root);
-
-    if(root.left !== null) 
-      Tree.#buildLevelOrderRecur(root.left, level + 1, result);
-
-    if(root.right !== null) 
-      Tree.#buildLevelOrderRecur(root.right, level + 1, result);
+    
+    Tree.#buildLevelOrderRecur(root.left, level + 1, result);
+    Tree.#buildLevelOrderRecur(root.right, level + 1, result);
   }
+}
 
+function preOrderForEach(root, callback) {
+  if(root === null) return;
+
+  callback(root.data);
+  preOrderForEach(root.left, callback);
+  preOrderForEach(root.right, callback);
 }
 
 function insert(root , value) {
@@ -263,5 +269,6 @@ function logValue(value) {
     console.log(value);
 }
 
-tree.levelOrderForEach(logValue);
-tree.levelOrderForEachRecur(logValue);
+//tree.levelOrderForEach(logValue);
+//tree.levelOrderForEachRecur(logValue);
+preOrderForEach(tree.root, logValue);
