@@ -10,6 +10,30 @@ class Tree {
   constructor(root) {
     this.root = root;
   }
+
+  insert(value) {
+    let previousNode = null;
+    let currentNode = this.root;
+
+    while(currentNode !== null) {
+      if(value === currentNode.data) {
+        console.log("exists already");
+        return;
+      }
+
+      previousNode = currentNode;
+
+      if(value < currentNode.data)
+        currentNode = currentNode.left;
+      else
+        currentNode = currentNode.right;
+    }
+
+    if(value < previousNode.data)
+      previousNode.left = new Node(value);
+    else
+      previousNode.right = new Node(value);
+}
   
   //Level Order Traversal: Iterative solution
   levelOrderForEach(callback) {
@@ -160,22 +184,6 @@ function postOrderForEach(root, callback) {
   postOrderForEach(root.right, callback);
   callback(root.data);
 }
-
-function insert(root , value) {
-    if(root == null) return new Node(value);
-    
-    if(value < root.data) {
-        root.left = insert(root.left, value);
-    }else {
-        root.right = insert(root.right, value);
-    }
-    return root;
-}
-
-
-
-
-
 
 //Delete functions
 
@@ -333,23 +341,13 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 
 const tree = buildTree(arr);
-insert(tree.root, 20.2);
-insert(tree.root, 8.8)
 prettyPrint(tree.root);
 
-deleteItem(tree.root, 67);
-
+tree.insert(8.8);
+tree.insert(326);
 
 prettyPrint(tree.root);
 
-
-let notFunction = "Not Function";
-
-function logValue(value) {
-    console.log(value);
-}
-
-console.log(tree.height(324));
 
 //tree.levelOrderForEach(logValue);
 //tree.levelOrderForEachRecur(logValue);
