@@ -75,6 +75,66 @@ class Tree {
     Tree.#buildLevelOrderRecur(root.left, level + 1, result);
     Tree.#buildLevelOrderRecur(root.right, level + 1, result);
   }
+
+  height(value) {
+    //1. Locate the node with given value.
+    const targetNode = this.#findNode(value);
+
+    //Return null if such node doesn't exist.
+    if(targetNode === null) return null;
+    
+    //Run this method recursively to find height.
+    return Tree.#getHeight(targetNode);
+  }
+
+  static #getHeight(root) {
+    /*Pseudocode
+      Simplest case: 
+       Assume a node's both children are leaf nodes, the leaf node's height is 0, 
+       and the node's height is 0 + 1.
+      Meaning parent's height = child's height + 1.
+
+    Within single recursion
+    0. If node is null, return -1, so that leaf node's height becomes 0.
+    1. find height of left child, then add 1.
+    2. find height of right child, then add 1.
+    3. The higher one is height of parent node.
+    */
+
+    //Base case:
+    if(root === null) return -1;
+
+    const height_left = Tree.#getHeight(root.left) + 1;
+    const height_right = Tree.#getHeight(root.right) + 1;
+
+    if(height_left > height_right) return height_left;
+    else return height_right;
+  }
+
+  #findNode(value) {
+    /* Recursive
+    if(root === null) return null;
+    if(root.data === value) return root;
+
+    if(value < root.data) {
+      return findNode(root.left, value);
+    } else if(value > root.data) {
+      return findNode(root.right, value);
+    }
+    */
+    
+    let currNode = this.root;
+
+    while(currNode !== null) {
+      if(currNode.data === value) return currNode;
+
+      if(value < currNode.data) currNode = currNode.left;
+      else if(value > currNode.data) currNode = currNode.right;
+    }
+
+    //No such node exists.
+    return null;
+}
 }
 
 function preOrderForEach(root, callback) {
@@ -112,30 +172,9 @@ function insert(root , value) {
     return root;
 }
 
-function findNode(root, value) {
 
-  /* Recursive
-  if(root === null) return null;
-  if(root.data === value) return root;
 
-  if(value < root.data) {
-    return findNode(root.left, value);
-  } else if(value > root.data) {
-    return findNode(root.right, value);
-  }
-   */
-  
-  let currNode = root;
 
-  while(currNode !== null) {
-    if(currNode.data === value) return currNode;
-
-    if(value < currNode.data) currNode = currNode.left;
-    else if(value > currNode.data) currNode = currNode.right;
-  }
-
-  return null;
-}
 
 
 //Delete functions
@@ -309,6 +348,8 @@ let notFunction = "Not Function";
 function logValue(value) {
     console.log(value);
 }
+
+console.log(tree.height(324));
 
 //tree.levelOrderForEach(logValue);
 //tree.levelOrderForEachRecur(logValue);
