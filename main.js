@@ -112,6 +112,31 @@ function insert(root , value) {
     return root;
 }
 
+function findNode(root, value) {
+
+  /* Recursive
+  if(root === null) return null;
+  if(root.data === value) return root;
+
+  if(value < root.data) {
+    return findNode(root.left, value);
+  } else if(value > root.data) {
+    return findNode(root.right, value);
+  }
+   */
+  
+  let currNode = root;
+
+  while(currNode !== null) {
+    if(currNode.data === value) return currNode;
+
+    if(value < currNode.data) currNode = currNode.left;
+    else if(value > currNode.data) currNode = currNode.right;
+  }
+
+  return null;
+}
+
 
 //Delete functions
 
@@ -287,4 +312,5 @@ function logValue(value) {
 
 //tree.levelOrderForEach(logValue);
 //tree.levelOrderForEachRecur(logValue);
-postOrderForEach(tree.root, logValue);
+//postOrderForEach(tree.root, logValue);
+
