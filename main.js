@@ -105,7 +105,7 @@ class Tree {
     const targetNode = this.#findNode(value);
 
     //Return null if such node doesn't exist.
-    if(targetNode === null) return null;
+    if(targetNode === undefined) return undefined;
     
     //Run this method recursively to find height.
     return Tree.#getHeight(targetNode);
@@ -157,7 +157,7 @@ class Tree {
     }
 
     //No such node exists.
-    return null;
+    return undefined;
 }
 }
 
@@ -348,6 +348,7 @@ tree.insert(326);
 
 prettyPrint(tree.root);
 
+console.log(tree.height(5.2));
 
 //tree.levelOrderForEach(logValue);
 //tree.levelOrderForEachRecur(logValue);
