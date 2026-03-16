@@ -78,9 +78,7 @@ class Tree {
         return;
     }
 
-    const result = [];
-
-    Tree.#buildLevelOrderRecur(this.root, 0, result);
+    const result =  Tree.#buildLevelOrderRecur(this.root, 0, []);
 
     result.forEach(level => {
       level.forEach(node => callback(node.data));
@@ -98,6 +96,8 @@ class Tree {
     
     Tree.#buildLevelOrderRecur(root.left, level + 1, result);
     Tree.#buildLevelOrderRecur(root.right, level + 1, result);
+
+    return result;
   }
 
   height(value) {
@@ -185,7 +185,53 @@ class Tree {
 
     //No such node exists.
     return undefined;
-}
+  }
+
+  /*
+  Conditions of a balanced tree:
+  - Heights of left subtree & right subtree of root differs by at most 1.
+  - Left subtree and right subtree are both balanced, therefore ensure all nodes' 
+    heights are compared.
+
+  Pseudocode:
+  Make a helper function heightDiff(node): returns height difference of left & right
+    1. At given node, use Tree.#getHeight(left/right), 
+       to calculate its height on its left and right
+    2. - tree root left height = Tree.#getHeight(root) + 1
+      - tree root right right = Tree.#getHeigh(root) + 1.
+      return difference = left - height
+  
+    In main method (recursively):
+    1. At 8, calculate its diff.
+    2. if 8 is balanced, calculate for 4, if 4 is balanced, repeat for 67.
+    3. 
+  */
+  isBalanced() {
+    if(this.root === null) return null;
+
+    //Integrate level order queue, to calculate height of nodes level by level.
+    //Order type doesn't matter, but this type has good time/space complexity.
+    const queue = [];
+    queue.push(this.root);
+
+    while(queue.length !== 0) {
+      let firstNode = queue.shift();
+
+      if(Tree.#heightDiff(firstNode) > 1) return false;
+
+      if(firstNode.left !== null) queue.push(firstNode.left);
+
+      if(firstNode.right !== null) queue.push(firstNode.right);
+    }
+
+    return true;
+  }
+
+  static #heightDiff(node) {
+    const left = Tree.#getHeight(node.left);
+    const right = Tree.#getHeight(node.right);
+    return Math.abs(left - right);
+  }
 }
 
 function preOrderForEach(root, callback) {
@@ -372,13 +418,18 @@ prettyPrint(tree.root);
 
 tree.insert(8.8);
 tree.insert(326);
+//
 
 prettyPrint(tree.root);
 
-console.log(tree.height(5.2));
-console.log(tree.depth(8.8));
 
-//tree.levelOrderForEach(logValue);
-//tree.levelOrderForEachRecur(logValue);
-//postOrderForEach(tree.root, logValue);
+function logNodeData(data) {
+  console.log(data);
+}
+
+//tree.levelOrderForEach(logNodeData);
+
+console.log(tree.isBalanced());
+//tree.levelOrderForEachRecur(logNodeData);
+//postOrderForEach(tree.root, logNodeData);
 
