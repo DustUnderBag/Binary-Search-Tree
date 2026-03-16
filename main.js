@@ -111,6 +111,33 @@ class Tree {
     return Tree.#getHeight(targetNode);
   }
 
+  depth(value) {
+    /*
+    1. Initialize depth as 0
+    2. currentNode = tree.root.
+    3. if(value === curr.data) return height.
+       if(value < curr.data) curr = left
+       if(value > curr.data) curr = right
+    4. height ++
+    */
+
+    let height = 0;
+    let currNode = this.root;
+    while(currNode !== null) {
+      if(value === currNode.data) return height;
+
+      if(value < currNode.data) 
+        currNode = currNode.left;
+      else
+        currNode = currNode.right;
+      
+      height++;
+    }
+
+    //If currNode = null, such value is missing in the tree.
+    return undefined;
+  }
+
   static #getHeight(root) {
     /*Pseudocode
       Simplest case: 
@@ -349,6 +376,7 @@ tree.insert(326);
 prettyPrint(tree.root);
 
 console.log(tree.height(5.2));
+console.log(tree.depth(8.8));
 
 //tree.levelOrderForEach(logValue);
 //tree.levelOrderForEachRecur(logValue);
