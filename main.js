@@ -7,8 +7,39 @@ class Node {
 }
 
 class Tree {
-  constructor(root) {
+  constructor(arr) {
+    if(arr.length === 0) {
+      this.root = null;
+      return;
+    }
+
+    const root = Tree.#buildTree(arr);
     this.root = root;
+  }
+
+  //New Tree instance builder functions
+  static #buildTree(arr) {
+    let sorted = mergeSort(arr, 0, arr.length - 1);
+
+    //Remove duplicates in sorted array.
+    sorted = removeDuplicate(sorted);
+    
+    console.log("Input sorted array", sorted);
+
+    const treeRoot = Tree.#buildBST(sorted, 0, sorted.length - 1);
+    return treeRoot;
+  }
+
+  static #buildBST(arr, start, end) {
+    if(start > end) return null;
+
+    const mid = Math.floor((start + end) / 2);
+
+    let root = new Node(arr[mid]);
+    root.left = Tree.#buildBST(arr, start, mid - 1);
+    root.right = Tree.#buildBST(arr, mid + 1, end);
+
+    return root;
   }
 
   insert(value) {
@@ -33,7 +64,8 @@ class Tree {
       previousNode.left = new Node(value);
     else
       previousNode.right = new Node(value);
-}
+
+  }
   
   //Level Order Traversal: Iterative solution
   levelOrderForEach(callback) {
@@ -344,32 +376,6 @@ function findNextGreaterValue(currNode) {
 
 
 //Builder Functions
-
-function buildTree(arr) {
-    let sorted = mergeSort(arr, 0, arr.length - 1);
-
-    //Remove duplicates in sorted array.
-    sorted = removeDuplicate(sorted);
-    
-    console.log("Input sorted array", sorted);
-
-    const root = buildBST(sorted, 0, sorted.length - 1);
-    return new Tree(root);
-}
-
-function buildBST(arr, start, end) {
-    if(start > end) return null;
-
-    const mid = Math.floor((start + end) / 2);
-
-    let root = new Node(arr[mid]);
-    root.left = buildBST(arr, start, mid - 1);
-    root.right = buildBST(arr, mid + 1, end);
-
-    return root;
-    
-}
-
 function mergeSort(arr, start, end) {
     if(start == end) return [arr[start]];
     
@@ -426,7 +432,7 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 
 const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 
-const tree = buildTree(arr);
+const tree = new Tree(arr);
 prettyPrint(tree.root);
 
 tree.insert(8.8);
@@ -446,5 +452,5 @@ console.log(tree.isBalanced());
 //tree.levelOrderForEachRecur(logNodeData);
 //postOrderForEach(tree.root, logNodeData);
 
-tree.postOrderForEach(logNodeData);
+//tree.postOrderForEach(logNodeData);
 
