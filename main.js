@@ -232,30 +232,43 @@ class Tree {
     const right = Tree.#getHeight(node.right);
     return Math.abs(left - right);
   }
-}
 
-function preOrderForEach(root, callback) {
-  if(root === null) return;
+  //DLR
+  preOrderForEach(callback) {
+    if(this.root === null) return;
 
-  callback(root.data);
-  preOrderForEach(root.left, callback);
-  preOrderForEach(root.right, callback);
-}
+    const left = new Tree(this.root.left);
+    const right = new Tree(this.root.right);
 
-function inOrderForEach(root, callback) {
-  if(root === null) return;
+    callback(this.root.data);
+    left.preOrderForEach(callback);
+    right.preOrderForEach(callback);
+  }
 
-  inOrderForEach(root.left, callback);
-  callback(root.data);
-  inOrderForEach(root.right, callback);
-}
+  //LDR
+  inOrderForEach(callback) {
+    if(this.root === null) return;
 
-function postOrderForEach(root, callback) {
-  if(root === null) return;
+    const left = new Tree(this.root.left);
+    const right = new Tree(this.root.right);
 
-  postOrderForEach(root.left, callback);
-  postOrderForEach(root.right, callback);
-  callback(root.data);
+    left.inOrderForEach(callback);
+    callback(this.root.data);
+    right.inOrderForEach(callback);
+  }
+
+  //LRD
+  postOrderForEach(callback) {
+    if(this.root === null) return;
+
+    const left = new Tree(this.root.left);
+    const right = new Tree(this.root.right);
+
+    left.postOrderForEach(callback);
+    right.postOrderForEach(callback);
+    callback(this.root.data);
+  }
+
 }
 
 //Delete functions
@@ -432,4 +445,6 @@ function logNodeData(data) {
 console.log(tree.isBalanced());
 //tree.levelOrderForEachRecur(logNodeData);
 //postOrderForEach(tree.root, logNodeData);
+
+tree.postOrderForEach(logNodeData);
 
