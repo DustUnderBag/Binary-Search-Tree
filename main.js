@@ -7,7 +7,7 @@ class Node {
 }
 
 class Tree {
-  constructor(arr) {
+  constructor(arr = []) {
     if(arr.length === 0) {
       this.root = null;
       return;
@@ -247,6 +247,7 @@ class Tree {
     queue.push(this.root);
 
     while(queue.length !== 0) {
+      //Keep reference to 1st node, then remove it from the queue.
       let firstNode = queue.shift();
 
       if(Tree.#heightDiff(firstNode) > 1) return false;
@@ -269,35 +270,52 @@ class Tree {
   preOrderForEach(callback) {
     if(this.root === null) return;
 
-    const left = new Tree(this.root.left);
-    const right = new Tree(this.root.right);
+    //New Tree instance from current node's left
+    let leftSubTree = new Tree();
+    leftSubTree.root = this.root.left;
+
+    //New Tree instance from current node's right
+    let rightSubTree = new Tree();
+    rightSubTree.root = this.root.right;
 
     callback(this.root.data);
-    left.preOrderForEach(callback);
-    right.preOrderForEach(callback);
+    leftSubTree.preOrderForEach(callback);
+    rightSubTree.preOrderForEach(callback);
   }
 
   //LDR
   inOrderForEach(callback) {
     if(this.root === null) return;
 
-    const left = new Tree(this.root.left);
-    const right = new Tree(this.root.right);
+    //New Tree instance from current node's left
+    let leftSubTree = new Tree();
+    leftSubTree.root = this.root.left;
 
-    left.inOrderForEach(callback);
+    //New Tree instance from current node's right
+    let rightSubTree = new Tree();
+    rightSubTree.root = this.root.right;
+
+    
+    leftSubTree.inOrderForEach(callback);
     callback(this.root.data);
-    right.inOrderForEach(callback);
+    rightSubTree.inOrderForEach(callback);
   }
 
   //LRD
   postOrderForEach(callback) {
     if(this.root === null) return;
 
-    const left = new Tree(this.root.left);
-    const right = new Tree(this.root.right);
+    //New Tree instance from current node's left
+    let leftSubTree = new Tree();
+    leftSubTree.root = this.root.left;
 
-    left.postOrderForEach(callback);
-    right.postOrderForEach(callback);
+    //New Tree instance from current node's right
+    let rightSubTree = new Tree();
+    rightSubTree.root = this.root.right;
+
+    
+    leftSubTree.postOrderForEach(callback);
+    rightSubTree.postOrderForEach(callback);
     callback(this.root.data);
   }
 
@@ -448,9 +466,10 @@ function logNodeData(data) {
 
 //tree.levelOrderForEach(logNodeData);
 
-console.log(tree.isBalanced());
+//console.log(tree.isBalanced());
+//tree.rebalance();
 //tree.levelOrderForEachRecur(logNodeData);
-//postOrderForEach(tree.root, logNodeData);
+tree.postOrderForEach(logNodeData);
 
 //tree.postOrderForEach(logNodeData);
 
