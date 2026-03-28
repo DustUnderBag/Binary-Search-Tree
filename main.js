@@ -44,6 +44,8 @@ export class Tree {
   }
 
   insert(value) {
+    if(this.root === null) this.root = new Node(value);
+    
     let previousNode = null;
     let currentNode = this.root;
 
