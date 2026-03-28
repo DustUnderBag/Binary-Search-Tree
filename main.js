@@ -6,7 +6,7 @@ class Node {
   }
 }
 
-class Tree {
+export class Tree {
   constructor(arr = []) {
     if(arr.length === 0) {
       this.root = null;
@@ -67,8 +67,83 @@ class Tree {
       previousNode.right = new Node(value);
 
   }
+
+  //Delete Functions
+  /*Three cases
+  1. Delete leaf node -> 
+      Remove the leaf node directly.
+      -> replace the node with null object.
+
+  2. Delete node with 1 child node -> 
+      Connect target's parent node with the child node.
+      -> Return the target's child node to the parent node.
+
+  3. Delete node with 2 child nodes ->
+      Step 1: 
+      Inorder successor: FInd the next greater value, which is the smallest value in right subtree OR 
+      Inorder predecessor: Find the next smaller value, which is the largest value in left subtree.
+
+      Step 2:
+      Replace target node with that successor/predecessor node, then delete the replacement node.
+
+      in deleteItem, find the target node, checks if it has two child nodes,
+      - Make a variable `successor`, equals to `findSuccessor`
+      - The Successor locate the next larger value, return the value.
+      - Run `deleteItem`, feed the method with current node, and successor's value, this process deletes the successor/replacement node.
+      - Assign the target node to be deleted with successor's value, 
+      - Return root.
+  */
+  deleteItem(value) {
+    const root = this.root;
+    this.root = Tree.#delete(root, value);
+  }
   
+  static #delete(root, value) {
+    //If value doesn't exist in the tree.
+    if(root === null) return root;
+
+    if(value < root.data) {
+        root.left = Tree.#delete(root.left, value);
+    }else if(value > root.data ) {
+        root.right = Tree.#delete(root.right, value);
+    }else {
+        //If target node has no child, return null.
+        if(root.left === null && root.right === null) return null;
+
+        //If target node has ONE child, return its child.
+        if(root.left === null) return root.right;
+        if(root.right === null) return root.left;
+
+        // If target node has TWO children, find next greater value(replacement node), 
+        // replace target value with replacement value, 
+        // delete the original replacement node. 
+        const successorNode = Tree.#findNextGreaterValue(root);
+        root.right = Tree.#delete(root.right, successorNode.data);
+        root.data = successorNode.data;
+    }
+
+    return root;
+  }
+
+  static #findNextGreaterValue(currNode) {
+    /*Find the next greater value.
+      - Expects root.right as input.
+        -Traverse till the left end of a given tree.
+    /*
+     Successor: a leaf node, meaning it's the smallest value in the right subtree.
+     The smallest node has no left child, might or might not have right child.
+    */
+   currNode = currNode.right;
+
+   while(currNode.left !== null) {
+       currNode = currNode.left;
+    }
+    
+    return currNode;
+}
+
   //Level Order Traversal: Iterative solution
+  //Preferred over recursion.
   levelOrderForEach(callback) {
     if(this.root === null) return;
 
@@ -340,79 +415,7 @@ class Tree {
 
 }
 
-//Delete functions
-
-/*Three cases
-1. Delete leaf node -> 
-    Remove the leaf node directly.
-    -> replace the node with null object.
-
-2. Delete node with 1 child node -> 
-     Connect target's parent node with the child node.
-     -> Return the target's child node to the parent node.
-
-3. Delete node with 2 child nodes ->
-    Step 1: 
-     Inorder successor: FInd the next greater value, which is the smallest value in right subtree OR 
-     Inorder predecessor: Find the next smaller value, which is the largest value in left subtree.
-
-    Step 2:
-     Replace target node with that successor/predecessor node, then delete the replacement node.
-
-    in deleteItem, find the target node, checks if it has two child nodes,
-    - Make a variable `successor`, equals to `findSuccessor`
-    - The Successor locate the next larger value, return the value.
-    - Run `deleteItem`, feed the method with current node, and successor's value, this process deletes the successor/replacement node.
-    - Assign the target node to be deleted with successor's value, 
-    - Return root.
-
-*/
-function deleteItem(root, value) {
-    //If value doesn't exist in the tree.
-    if(root === null) return root;
-
-    if(value < root.data) {
-        root.left = deleteItem(root.left, value);
-    }else if(value > root.data ) {
-        root.right = deleteItem(root.right, value);
-    }else {
-        //If target node has no child, return null.
-        if(root.left === null && root.right === null) return null;
-
-        //If target node has ONE child, return its child.
-        if(root.left === null) return root.right;
-        if(root.right === null) return root.left;
-
-        // If target node has TWO children, find next greater value(replacement node), 
-        // replace target value with replacement value, 
-        // delete the original replacement node. 
-        const successorNode = findNextGreaterValue(root);
-        root.right = deleteItem(root.right, successorNode.data);
-        root.data = successorNode.data;
-    }
-
-    return root;
-}
-
-function findNextGreaterValue(currNode) {
-    /*Find the next greater value.
-      - Expects root.right as input.
-        -Traverse till the left end of a given tree.
-    /*
-     Successor: a leaf node, meaning it's the smallest value in the right subtree.
-     The smallest node has no left child, might or might not have right child.
-    */
-   currNode = currNode.right;
-
-   while(currNode.left !== null) {
-       currNode = currNode.left;
-    }
-    
-    return currNode;
-}
-
-
-//Builder Functions
+//Sorting Functions
 function mergeSort(arr, start, end) {
     if(start == end) return [arr[start]];
     
@@ -454,7 +457,9 @@ function removeDuplicate(arr) {
     return arr.filter( num => seen.hasOwnProperty(num) ? false : (seen[num] = true) );
 }
 
-const prettyPrint = (node, prefix = '', isLeft = true) => {
+
+//Print tree in the console.
+export const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node === null) {
     return;
   }
@@ -466,37 +471,3 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
     prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
   }
 };
-
-const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-
-const tree = new Tree(arr);
-console.log("Original tree:");
-prettyPrint(tree.root);
-
-tree.insert(8.8);
-tree.insert(326);
-tree.insert(327);
-tree.insert(7.7);
-tree.insert(7.9)
-
-console.log("After insertion:")
-prettyPrint(tree.root);
-
-
-function logNodeData(data) {
-  console.log(data);
-}
-
-//tree.levelOrderForEach(logNodeData);
-
-console.log(tree.isBalanced());
-//tree.levelOrderForEachRecur(logNodeData);
-//tree.postOrderForEach(logNodeData);
-
-
-console.log("Rebalanced");
-tree.rebalance();
-
-prettyPrint(tree.root);
-//tree.postOrderForEach(logNodeData);
-
