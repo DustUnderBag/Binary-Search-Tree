@@ -30,6 +30,7 @@ class Tree {
     return treeRoot;
   }
 
+  //Expects sorted array
   static #buildBST(arr, start, end) {
     if(start > end) return null;
 
@@ -319,6 +320,24 @@ class Tree {
     callback(this.root.data);
   }
 
+  rebalance() {
+    if(this.isBalanced()) {
+      console.log("Tree is already balanced, rebalance is unnecessary.");
+      return;
+    }
+
+    const sortedArr = [];
+
+    //Use in-order traversal to get sorted array,
+    //thus no need to call mergeSort
+    this.inOrderForEach( data => {
+      sortedArr.push(data);
+    });
+
+    const newRoot = Tree.#buildBST(sortedArr, 0, sortedArr.length - 1);
+    this.root = newRoot;
+  }
+
 }
 
 //Delete functions
@@ -451,12 +470,16 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 
 const tree = new Tree(arr);
+console.log("Original tree:");
 prettyPrint(tree.root);
 
 tree.insert(8.8);
 tree.insert(326);
-//
+tree.insert(327);
+tree.insert(7.7);
+tree.insert(7.9)
 
+console.log("After insertion:")
 prettyPrint(tree.root);
 
 
@@ -466,10 +489,14 @@ function logNodeData(data) {
 
 //tree.levelOrderForEach(logNodeData);
 
-//console.log(tree.isBalanced());
-//tree.rebalance();
+console.log(tree.isBalanced());
 //tree.levelOrderForEachRecur(logNodeData);
-tree.postOrderForEach(logNodeData);
+//tree.postOrderForEach(logNodeData);
 
+
+console.log("Rebalanced");
+tree.rebalance();
+
+prettyPrint(tree.root);
 //tree.postOrderForEach(logNodeData);
 
